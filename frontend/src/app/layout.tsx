@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-yellow-500 min-h-[100dvh]">
-        <header className="bg-red-100">헤더</header>
+        <header className="bg-sky-300 border-[2px] border-black">헤더</header>
         <div className="bg-blue-300">{children}</div>
         <footer className="bg-green-200">푸터</footer>
       </body>
