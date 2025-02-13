@@ -34,7 +34,7 @@ public class ApiV1PostController {
     }
 
     @Operation(
-            summary = "통계 조회"
+            summary = "통계 조회12"
     )
     @GetMapping("/statistics")
     public RsData<StatisticsResBody> getStatistics() {
