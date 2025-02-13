@@ -500,7 +500,7 @@ export interface operations {
             query?: {
                 page?: number;
                 pageSize?: number;
-                keywordType?: "TITLE" | "CONTENT";
+                keywordType?: "title" | "content";
                 keyword?: string;
             };
             header?: never;
@@ -665,7 +665,7 @@ export interface operations {
             query?: {
                 page?: number;
                 pageSize?: number;
-                keywordType?: "TITLE" | "CONTENT";
+                keywordType?: "title" | "content";
                 keyword?: string;
             };
             header?: never;
