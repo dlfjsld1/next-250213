@@ -1,3 +1,22 @@
+type PostDto = {
+  id: number;
+  createdDate: string;
+  modifiedDate: string;
+  authorId: number;
+  authorName: string;
+  title: string;
+  published: boolean;
+  listed: boolean;
+};
+
+type PostItemPageDto = {
+  currentPageNo: number;
+  pageSize: number;
+  totalPages: number;
+  totalItems: number;
+  items: PostDto[];
+};
+
 export default async function Page() {
   const response = await fetch("http://localhost:8080/api/v1/posts");
 
@@ -6,7 +25,7 @@ export default async function Page() {
   }
 
   const rsData = await response.json();
-  const pageDto = rsData.data;
+  const pageDto: PostItemPageDto = rsData.data;
 
   return (
     <div>
@@ -23,7 +42,7 @@ export default async function Page() {
       <hr />
 
       <ul>
-        {pageDto.items.map((item: any) => {
+        {pageDto.items.map((item: PostDto) => {
           return (
             <li className="border-2 border-red-500 my-2 p-2" key={item.id}>
               <div>id : {item.id}</div>
