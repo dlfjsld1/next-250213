@@ -1,7 +1,9 @@
-import { components } from "@/lib/backend/apiV1/schema";
+import { paths } from "@/lib/backend/apiV1/schema";
+import createClient from "openapi-fetch";
 
-type PostDto = components["schemas"]["PostDto"];
-type PostItemPageDto = components["schemas"]["PageDto"];
+const client = createClient<paths>({
+  baseUrl: "http://localhost:8080",
+});
 
 export default async function Page({
   searchParams,
@@ -13,16 +15,28 @@ export default async function Page({
 }) {
   const { keywordType = "title", keyword = "" } = await searchParams;
 
-  const response = await fetch(
-    `http://localhost:8080/api/v1/posts?keywordType=${keywordType}&keyword=${keyword}`
-  );
+  const response = await client.GET("/api/v1/posts", {
+    params: {
+      query: {
+        keyword: keyword,
+        keywordType: keywordType,
+      },
+    },
+  });
 
-  if (!response.ok) {
-    throw new Error("에러");
-  }
+  const rsData = response.data!!;
+  const pageDto = rsData.data;
 
-  const rsData = await response.json();
-  const pageDto: PostItemPageDto = rsData.data;
+  //   const response = await fetch(
+  //     `http://localhost:8080/api/v1/posts?keywordType=${keywordType}&keyword=${keyword}`
+  //   );
+
+  //   if (!response.ok) {
+  //     throw new Error("에러");
+  //   }
+
+  //   const rsData = await response.json();
+  //   const pageDto = rsData.data;
 
   return (
     <div>
@@ -53,7 +67,7 @@ export default async function Page({
       </form>
 
       <ul>
-        {pageDto.items.map((item: PostDto) => {
+        {pageDto.items.map((item) => {
           return (
             <li className="border-2 border-red-500 my-2 p-2" key={item.id}>
               <div>id : {item.id}</div>
