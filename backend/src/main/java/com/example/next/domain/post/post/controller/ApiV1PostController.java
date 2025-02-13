@@ -6,6 +6,7 @@ import com.example.next.domain.post.post.dto.PostWithContentDto;
 import com.example.next.domain.post.post.entity.Post;
 import com.example.next.domain.post.post.service.PostService;
 import com.example.next.global.Rq;
+import com.example.next.global.dto.Empty;
 import com.example.next.global.dto.RsData;
 import com.example.next.global.exception.ServiceException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -177,7 +178,7 @@ public class ApiV1PostController {
     )
     @DeleteMapping("{id}")
     @Transactional
-    public RsData<Void> delete(@PathVariable long id) {
+    public RsData<Empty> delete(@PathVariable long id) {
 
         Member actor = rq.getActor();
 

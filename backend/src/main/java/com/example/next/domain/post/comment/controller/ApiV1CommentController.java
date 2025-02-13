@@ -6,6 +6,7 @@ import com.example.next.domain.post.comment.entity.Comment;
 import com.example.next.domain.post.post.entity.Post;
 import com.example.next.domain.post.post.service.PostService;
 import com.example.next.global.Rq;
+import com.example.next.global.dto.Empty;
 import com.example.next.global.dto.RsData;
 import com.example.next.global.exception.ServiceException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,7 +73,7 @@ public class ApiV1CommentController {
     )
     @PostMapping
     @Transactional
-    public RsData<Void> write(@PathVariable long postId, @RequestBody WriteReqBody reqBody) {
+    public RsData<Empty> write(@PathVariable long postId, @RequestBody WriteReqBody reqBody) {
         Member actor = rq.getActor();
         Comment comment = _write(postId, actor, reqBody.content());
 
@@ -94,7 +95,7 @@ public class ApiV1CommentController {
     )
     @PutMapping("{id}")
     @Transactional
-    public RsData<Void> modify(@PathVariable long postId, @PathVariable long id, @RequestBody ModifyReqBody reqBody) {
+    public RsData<Empty> modify(@PathVariable long postId, @PathVariable long id, @RequestBody ModifyReqBody reqBody) {
 
         Member actor = rq.getActor();
 
@@ -116,7 +117,7 @@ public class ApiV1CommentController {
 
     @DeleteMapping("{id}")
     @Transactional
-    public RsData<Void> delete(@PathVariable long postId, @PathVariable long id) {
+    public RsData<Empty> delete(@PathVariable long postId, @PathVariable long id) {
 
         Member actor = rq.getActor();
         Post post = postService.getItem(postId).orElseThrow(
