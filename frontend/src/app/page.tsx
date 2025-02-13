@@ -1,3 +1,3 @@
-export default function Home() {
-  return <div>안녕하세요</div>;
+export default function Page() {
+  return <div>메인페이지입니다.</div>;
 }
