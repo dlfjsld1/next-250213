@@ -18,13 +18,13 @@ export default async function Page({
   const response = await client.GET("/api/v1/posts", {
     params: {
       query: {
-        keyword: keyword,
-        keywordType: keywordType,
+        keyword,
+        keywordType,
       },
     },
   });
 
-  const rsData = response.data!!;
+  const rsData = response.data!!; // 여기는 null이나 undefined가 절대 들어오지 않는다.
   const pageDto = rsData.data;
 
   //   const response = await fetch(
