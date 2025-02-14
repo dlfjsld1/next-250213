@@ -1,6 +1,3 @@
-import { paths } from "@/lib/backend/apiV1/schema";
-import Link from "next/link";
-import createClient from "openapi-fetch";
 import ClientPage from "./ClientPage";
 import client from "@/lib/backend/client";
 

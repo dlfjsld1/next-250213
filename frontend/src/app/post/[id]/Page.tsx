@@ -1,6 +1,4 @@
-import createClient from "openapi-fetch";
 import ClientPage from "./ClientPage";
-import { paths } from "@/lib/backend/apiV1/schema";
 import client from "@/lib/backend/client";
 
 export default async function Page({
