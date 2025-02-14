@@ -22,7 +22,7 @@ export default async function Page({
     keyword = "",
     pageSize = 10,
     page = 1,
-  } = searchParams;
+  } = await searchParams;
 
   const response = await client.GET("/api/v1/posts", {
     params: {
