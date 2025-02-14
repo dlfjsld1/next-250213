@@ -64,9 +64,6 @@ export default async function ClientPage({
           )
         )}
       </div>
-      <Link href="">1</Link>
-      <Link href="">2</Link>
-      <Link href="">3</Link>
 
       <ul>
         {pageDto.items.map((item) => {
