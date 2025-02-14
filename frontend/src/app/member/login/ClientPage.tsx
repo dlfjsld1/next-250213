@@ -20,6 +20,8 @@ export default function ClientPage() {
         username,
         password,
       },
+      //이 옵션을 넣어야 서버에서 받은 쿠키를 자동으로 저장해준다
+      credentials: "include",
     });
 
     if (response.error) {
