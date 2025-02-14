@@ -29,7 +29,8 @@ export default function ClientPage() {
       return;
     }
 
-    router.push(`/post/list`);
+    // router.push(`/post/list`);
+    window.location.href="/post/list";
   }
   
   return (
