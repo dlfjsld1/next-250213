@@ -74,7 +74,11 @@ export default async function Page({
       <div className="flex gap-2">
         {
             Array.from({length: pageDto.totalPages}, (_, i) => i + 1).map(
-            (page) => <Link href={
+            (pageNo) => <Link 
+            //현재 페이지면 빨간색 아니면 파란색
+            className={pageNo === page ? "text-red-500" : "text-blue-500"}
+            key={page}
+            href={
               `/post/list?keywordType=${keywordType}&keyword=${keyword}&pageSize=${pageSize}&page=${page}`
             }>{page}</Link>
         )}
