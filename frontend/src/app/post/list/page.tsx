@@ -1,4 +1,5 @@
 import { paths } from "@/lib/backend/apiV1/schema";
+import Link from "next/link";
 import createClient from "openapi-fetch";
 
 const client = createClient<paths>({
@@ -11,32 +12,30 @@ export default async function Page({
   searchParams: {
     keywordType?: "title" | "content";
     keyword: string;
+    pageSize: number;
+    page: number;
   };
 }) {
-  const { keywordType = "title", keyword = "" } = await searchParams;
+  const { 
+    keywordType = "title", 
+    keyword = "", 
+    pageSize = 10, 
+    page = 1 
+  } = await searchParams;
 
   const response = await client.GET("/api/v1/posts", {
     params: {
       query: {
         keyword,
         keywordType,
+        pageSize,
+        page,
       },
     },
   });
 
   const rsData = response.data!!; // 여기는 null이나 undefined가 절대 들어오지 않는다.
   const pageDto = rsData.data;
-
-  //   const response = await fetch(
-  //     `http://localhost:8080/api/v1/posts?keywordType=${keywordType}&keyword=${keyword}`
-  //   );
-
-  //   if (!response.ok) {
-  //     throw new Error("에러");
-  //   }
-
-  //   const rsData = await response.json();
-  //   const pageDto = rsData.data;
 
   return (
     <div>
@@ -64,7 +63,23 @@ export default async function Page({
           defaultValue={keyword}
         />
         <input type="submit" value="검색" />
+        <label className="ml-5" htmlFor="">페이지당 행 개수</label>
+        <select name="pageSize">
+          <option value="10">10</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
       </form>
+
+      <div className="flex gap-2">
+        {
+            Array.from({length: pageDto.totalPages}, (_, i) => i + 1).map(
+            (page) => <Link href={`/post/list?page=${page}`}>{page}</Link>
+        )}
+      </div>
+      <Link href="">1</Link>
+      <Link href="">2</Link>
+      <Link href="">3</Link>
 
       <ul>
         {pageDto.items.map((item) => {
