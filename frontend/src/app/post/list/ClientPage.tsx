@@ -1,7 +1,10 @@
+"use client";
+
 import { components } from "@/lib/backend/apiV1/schema";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export default async function ClientPage({
+export default function ClientPage({
   rsData,
   keywordType,
   keyword,
@@ -14,6 +17,7 @@ export default async function ClientPage({
   pageSize: number;
   page: number;
 }) {
+  const router = useRouter();
   const pageDto = rsData.data;
 
   return (
@@ -30,7 +34,24 @@ export default async function ClientPage({
 
       <hr />
 
-      <form>
+      <form onSubmit={(e) => {
+            
+            //기본 기능(요청으로 새로고침) 막는다
+            e.preventDefault();
+
+            //폼에서 데이터 불러와서 세팅
+            const formData = new FormData(e.target as HTMLFormElement);
+            const keywordType = formData.get("keywordType") as string;
+            const keyword = formData.get("keyword") as string;
+            const pageSize = Number(formData.get("pageSize"));
+            const page = 1;
+
+            //nextjs가 제공하는 방식인 router로 주소를 바꿈
+            //이렇게 하면 페이지 깜빡임 없이 주소만 바뀜
+            router.push(
+                `/post/list?keywordType=${keywordType}&keyword=${keyword}&pageSize=${pageSize}&page=${page}`
+            );
+        }}>
         <select name="keywordType" defaultValue={keywordType}>
           <option value="title">제목</option>
           <option value="content">내용</option>
@@ -56,6 +77,7 @@ export default async function ClientPage({
         {Array.from({ length: pageDto.totalPages }, (_, i) => i + 1).map(
           (pageNo) => (
             <Link
+              key={pageNo}
               className={pageNo == page ? `text-red-500` : `text-blue-500`}
               href={`/post/list?keywordType=${keywordType}&keyword=${keyword}&pageSize=${pageSize}&page=${pageNo}`}
             >
