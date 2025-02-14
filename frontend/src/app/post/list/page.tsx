@@ -21,7 +21,7 @@ export default async function Page({
     keyword = "", 
     pageSize = 10, 
     page = 1 
-  } = await searchParams;
+  } = searchParams;
 
   const response = await client.GET("/api/v1/posts", {
     params: {
@@ -64,7 +64,7 @@ export default async function Page({
         />
         <input type="submit" value="검색" />
         <label className="ml-5" htmlFor="">페이지당 행 개수</label>
-        <select name="pageSize">
+        <select name="pageSize" defaultValue={pageSize}>
           <option value="10">10</option>
           <option value="30">30</option>
           <option value="50">50</option>
@@ -74,7 +74,9 @@ export default async function Page({
       <div className="flex gap-2">
         {
             Array.from({length: pageDto.totalPages}, (_, i) => i + 1).map(
-            (page) => <Link href={`/post/list?page=${page}`}>{page}</Link>
+            (page) => <Link href={
+              `/post/list?keywordType=${keywordType}&keyword=${keyword}&pageSize=${pageSize}&page=${page}`
+            }>{page}</Link>
         )}
       </div>
       <Link href="">1</Link>
