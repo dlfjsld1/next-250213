@@ -111,10 +111,13 @@ public class ApiV1PostController {
             post.canRead(actor);
         }
 
+        PostWithContentDto postWithContentDto = new PostWithContentDto(post);
+        postWithContentDto.setCanActorHandle(post.getHandleAuthority(rq.getActor()));
+
         return new RsData<>(
                 "200-1",
                 "%d번 글을 조회하였습니다.".formatted(id),
-                new PostWithContentDto(post)
+                postWithContentDto
         );
     }
 
