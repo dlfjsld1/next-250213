@@ -253,6 +253,7 @@ export interface components {
             authorName: string;
             published: boolean;
             listed: boolean;
+            canActorHandle: boolean;
         };
         RsDataPostWithContentDto: {
             code: string;

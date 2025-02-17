@@ -5,10 +5,8 @@ import Link from "next/link";
 
 export default function ClinetPage({
   post,
-  me
 }: {
   post: components["schemas"]["PostWithContentDto"];
-  me: components["schemas"]["MemberDto"];
 }) {
 
   return (
@@ -24,8 +22,9 @@ export default function ClinetPage({
       <div>공개 여부 : {`${post.published}`}</div>
       <div>리스팅 여부 : {`${post.listed}`}</div>
     </div>
-    {me.id === post.authorId && <div>
+    {post.canActorHandle && <div>
       <Link href={`/post/edit/${post.id}`}>수정</Link>
+      <Link href={`/post/delete/${post.id}`}>삭제</Link>
     </div>}
     </>
   );
