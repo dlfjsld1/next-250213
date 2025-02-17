@@ -7,13 +7,14 @@ export default function ClientPage() {
 
   const router = useRouter();
 
-  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+  const join = async (e: React.FormEvent<HTMLFormElement>) => {
     
     e.preventDefault();
 
     const form = e.target as HTMLFormElement;
     const username = form.username.value;
     const password = form.password.value;
+    const nickname = form.nickname.value;
 
     if(username.trim().length === 0) {
       alert("아이디를 입력해주세요.");
@@ -24,11 +25,17 @@ export default function ClientPage() {
       alert("비밀번호를 입력해주세요.");
       return;
     }
+
+    if(nickname.trim().length === 0) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
     
-    const response = await client.POST("/api/v1/members/login", {
+    const response = await client.POST("/api/v1/members/join", {
       body: {
         username,
         password,
+        nickname,
       },
       //이 옵션을 넣어야 서버에서 받은 쿠키를 자동으로 저장해준다
       credentials: "include",
@@ -39,15 +46,14 @@ export default function ClientPage() {
       return;
     }
 
-    // router.push(`/post/list`);
-    window.location.href="/post/list";
+    router.push(`/member/login`);
   }
   
   return (
     <>
-      <div>로그인 페이지</div>
+      <div>회원가입 페이지</div>
       <form 
-        onSubmit={login}
+        onSubmit={join}
         className="flex flex-col w-1/4 gap-3">
         <input 
           className="border-2 border-black" 
@@ -61,7 +67,13 @@ export default function ClientPage() {
           name="password" 
           placeholder="패스워드 입력" 
         />
-        <input type="submit" value="로그인" />
+        <input 
+          className="border-2 border-black" 
+          type="nickname" 
+          name="nickname" 
+          placeholder="닉네임 입력" 
+        />
+        <input type="submit" value="회원가입" />
       </form>
     </>
   );
