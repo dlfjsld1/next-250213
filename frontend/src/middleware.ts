@@ -1,38 +1,70 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import client from "./lib/backend/client";
 import { cookies } from "next/headers";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export async function middleware(request: NextRequest) {
-    const reqToken = request.cookies.get("accessToken");
+  const myCookies = await cookies();
+  const accessToken = myCookies.get("accessToken");
+  const { isLogin, isExpired, payload } = parseAccessToken(accessToken);
+  
+  if (isLogin && isExpired) {
+    return refreshAccessToken();
+  }
 
-    console.log(request.nextUrl.toString());
-    if (request.nextUrl.pathname.startsWith("/post/edit/")) {
-        return new NextResponse("로그인이 필요합니다.", {
-            status: 401,
-            headers: {
-                "Content-Type": "text/html; charset=utf-8",
+  if (!isLogin && isProtectedRoute(request.nextUrl.pathname)) {
+    return createUnauthorizedResponse();
+  }
+}
 
-            },
-        })
-    }
-
-    //넥스트js 서버에서 클라이언트로 가는 것
+async function refreshAccessToken() {
     const nextResponse = NextResponse.next();
-
-    //서버에서 넥스트js로 가져온 것
     const response = await client.GET("/api/v1/members/me", {
-        headers: {
-          cookie: (await cookies()).toString(),
-        },
-      });
-
-    //스프링 서버에서 가져온 쿠키를 nextjs 서버가 클라이언트로 보내주는 응답에 넣어준다
+      headers: {
+        cookie: (await cookies()).toString(),
+      },
+    });
     const springCookie = response.response.headers.getSetCookie();
     nextResponse.headers.set("set-cookie", String(springCookie));
-  
     return nextResponse;
+}
+
+function parseAccessToken(accessToken: RequestCookie | undefined) {
+    let isExpired = true;
+    let payload = null;
+
+  if (accessToken) {
+    try {
+      const tokenParts = accessToken.value.split(".");
+      payload = JSON.parse(Buffer.from(tokenParts[1], "base64").toString());
+      const expTimestamp = payload.exp * 1000; // exp는 초 단위이므로 밀리초로 변환
+      isExpired = Date.now() > expTimestamp;
+      console.log("토큰 만료 여부:", isExpired);
+    } catch (e) {
+      console.error("토큰 파싱 중 오류 발생:", e);
+    }
   }
-  
-  export const config = {
-    matcher: "/:path*",
-  };
+  let isLogin = payload !== null;
+
+  return { isLogin, isExpired, payload };
+}
+
+
+function isProtectedRoute(pathname: string): boolean {
+  return (
+    pathname.startsWith("/post/write") || 
+    pathname.startsWith("/post/edit")
+  );
+}
+
+function createUnauthorizedResponse(): NextResponse {
+  return new NextResponse("로그인이 필요합니다.", {
+    status: 401,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+    },
+  });
+}
+export const config = {
+  matcher: "/((?!.*\\.|api\\/).*)",
+};
