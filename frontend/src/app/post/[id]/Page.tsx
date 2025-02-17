@@ -1,5 +1,6 @@
 import ClientPage from "./ClientPage";
 import client from "@/lib/backend/client";
+import { cookies } from "next/headers";
 
 export default async function Page({
   params,
@@ -15,7 +16,9 @@ export default async function Page({
         id,
       },
     },
-    credentials: "include",
+    headers: {
+          cookie: (await cookies()).toString(),
+        }
   });
 
   if (response.error) {
