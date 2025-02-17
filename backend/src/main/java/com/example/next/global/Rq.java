@@ -28,7 +28,7 @@ public class Rq {
     public void setLogin(Member actor) {
 
         // 유저 정보 생성
-        UserDetails user = new SecurityUser(actor.getId(), actor.getUsername(), "", actor.getAuthorities());
+        UserDetails user = new SecurityUser(actor.getId(), actor.getUsername(), "", actor.getNickname(), actor.getAuthorities());
 
         // 인증 정보 저장소
         SecurityContextHolder.getContext().setAuthentication(
@@ -42,9 +42,7 @@ public class Rq {
         if(authentication == null) {
             throw new ServiceException("401-2", "로그인이 필요합니다.");
         }
-
         Object principal = authentication.getPrincipal();
-
         if(!(principal instanceof SecurityUser)) {
             throw new ServiceException("401-3", "잘못된 인증 정보입니다");
         }
@@ -54,6 +52,7 @@ public class Rq {
         return Member.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .nickname(user.getNickname())
                 .build();
     }
 
